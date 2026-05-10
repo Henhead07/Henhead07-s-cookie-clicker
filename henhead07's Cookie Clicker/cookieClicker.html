@@ -1,0 +1,490 @@
+<html>
+    <title>henhead07's Cookie Clicker</title>
+    <head>
+        <style>
+            .centered {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+
+            .demonCentered {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .demonCentered:hover {
+                transform: translateX(-50%) scale(1.1);
+            }
+
+            .centered:hover {
+                transform: translateX(-50%) scale(1.1);
+            }
+
+            .centered:active {
+                transform: translateX(-50%) scale(1.2);
+            }
+
+            .demonCentered:active {
+                transform: translateX(-50%) scale(1.2);
+            }
+
+            .centered2 {
+                position: block;
+                text-align: center;
+            }
+
+            .takeoverCentered {
+                position: absolute;
+                left: 50%;
+                top: 55%;
+                transform: translate(-50%, -50%);
+            }
+
+            .bigger {
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .bigger:hover {
+                transform: scale(1.2);
+            }
+
+            .right {
+                position: absolute;
+                float: right;
+                right: 2%;
+                top: 10px;
+            }
+
+            .up1 {
+                position: absolute;
+                float: right;
+                right: 2%;
+                top: 80px;
+            }
+
+            .up2 {
+                position: absolute;
+                float: right;
+                right: 2%;
+                top: 120px;
+            }
+
+            .up3 {
+                position: absolute;
+                float: right;
+                right: 2%;
+                top: 160px;
+            }
+
+            #bgVideo {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+                z-index: -1;
+                pointer-events: none;
+            }
+
+
+        </style>
+    </head>
+    <body bgcolor="#f0e68c">
+        <h1 id="startDisplay" class="centered2">Click the cookie</h1>
+        <h1 id="cookiesDisplay" class="centered2" hidden>Cookies: 0</h1>
+        <h2 class="centered2" id="perSecondDisplay" hidden>Per Second: 0</h2>
+        <h3 class="centered2" id="perClickDisplay" hidden>Per click: 1</h3>
+        <br>
+        <img id="cookieImage" onclick="addCookie()" class="centered" src="cookie.png" width="800px" alt="Cookie">
+        <img id="demonCookieImage" onclick="addCookie()" class="demonCentered" src="demonCookie.png" width="300px" alt="Demon Cookie" hidden>
+        <h1 id="GrandmaTakeover" class="takeoverCentered" text-size="100px" hidden>WE ARE THE GRANDMAS - The Grandmas</h1>
+        <img id="cursorImage" onclick="buyCursor()" src="cursor.png" width="50px" alt="cursor" class="bigger" hidden>
+        <h1 id="cursorDisplay" hidden>Cursor: +1/sec</h1>
+        <h2 id="cursorCostDisplay" hidden>Cost: 100</h2>
+        <h2 id="cursorOwnedDisplay" hidden>Owned: 0</h2>
+        <br>
+        <img id="grandmaImage" onclick="buyGrandma()" src="grandma.png" width="75px" alt="grandma" class="bigger" hidden>
+        <h1 id="grandmaDisplay" hidden>Grandma: +10/sec</h1>
+        <h2 id="grandmaCostDisplay" hidden>Cost: 500</h2>
+        <h2 id="grandmaOwnedDisplay" hidden>Owned: 0</h2>
+        <br>
+        <img id="farmImage" onclick="buyFarm()" src="farm.png" width="75px" alt="farm" class="bigger" hidden>
+        <h1 id="farmDisplay" hidden>Farm: +100/sec</h1>
+        <h2 id="farmCostDisplay" hidden>Cost: 5000</h2>
+        <h2 id="farmOwnedDisplay" hidden>Owned: 0</h2>
+        <h1 id="upgradesText" class="right" hidden>Upgrades:</h1>
+        <button id="upgrade1" class="up1 bigger" onclick="upgrade1()" hidden>Iron cursors: 250</button>
+        <button id="upgrade2" class="up2 bigger" onclick="upgrade2()" hidden>Speedy grandmas: 1000</button>
+        <button id="upgrade3" class="up1 bigger" onclick="upgrade3()" hidden>Steel cursors: 750</button>
+        <button id="upgrade4" class="up2 bigger" onclick="upgrade4()" hidden>Drugged grandmas: 5000</button>
+        <button id="upgrade5" class="up3 bigger" onclick="upgrade5()" hidden>Farm fertilizer: 10000</button>
+        <button id="upgrade6" class="up3 bigger" onclick="upgrade6()" hidden>Illegal farming methods: 25000</button>
+        <button id="upgrade7" class="up1 bigger" onclick="upgrade7()" hidden>Gold cursors: 2000</button>
+        <button id="upgrade8" class="up1 bigger" onclick="upgrade8()" hidden>Platinum cursors: 5500</button>
+        <button id="upgrade9" class="up2 bigger" onclick="upgrade9()" hidden>Grandma brain surgery: 10000</button>
+        <button id="upgrade10" class="up3 bigger" onclick="upgrade10()" hidden>Alien farmland: 50000</button>
+
+        <video id="bgVideo" autoplay muted loop playsinline hidden>
+            <source src="grandmaTakeover.mp4" type="video/mp4">
+        </video>
+
+        
+        <script>
+            Music = new Audio ("backgroundMusic.mp3");
+            Music.loop = true;
+            demonSong = new Audio("GrandmaBackgroundMusic.mp3");
+            demonSong.loop = true;
+            takeoverSong = new Audio("grandmaTakeoverBackgroundMusic.mp3");
+            takeoverSong.loop = true;
+
+            let cookies = 0;
+            let cookiesMultiplier = 1;
+            let cursorOwned = 0;
+            let cursorCost = 100;
+            let perSecond = 0;
+            let grandmaOwned = 0;
+            let grandmaCost = 500;
+            let cursorMultiplier = 1;
+            let grandmaMultiplier = 10;
+            let grandmaCookies = 0;
+            let farmOwned = 0;
+            let farmCost = 5000;
+            let farmMultiplier = 100;
+            let upgrades = {
+                ironCursors: false,
+                speedyGrandmas: false,
+                druggedGrandmas: false,
+                grandmaBrainSurgery: false,
+                steelCursors: false,
+                goldCursors: false,
+                platinumCursors: false,
+                farmFertilizer: false,
+                illegalFarming: false,
+                alienFarmland: false
+            };
+            let grandmaTakeover = {
+                background1: false,
+                background2: false,
+                background3: false
+            };
+            let started = false;
+
+            function onStart() {
+                if (!started) {
+                    Music.play();
+                    document.getElementById("cookieImage").width = 300;
+                    document.getElementById("cookieImage").height = 300;
+                    document.getElementById("startDisplay").hidden = true;
+                    document.getElementById("cookiesDisplay").hidden = false;
+                    document.getElementById("perSecondDisplay").hidden = false;
+                    document.getElementById("perClickDisplay").hidden = false;
+                    document.getElementById("cursorImage").hidden = false;
+                    document.getElementById("cursorDisplay").hidden = false;
+                    document.getElementById("cursorCostDisplay").hidden = false;
+                    document.getElementById("cursorOwnedDisplay").hidden = false;
+                    document.getElementById("grandmaImage").hidden = false;
+                    document.getElementById("grandmaDisplay").hidden = false;
+                    document.getElementById("grandmaCostDisplay").hidden = false;
+                    document.getElementById("grandmaOwnedDisplay").hidden = false;
+                    document.getElementById("upgradesText").hidden = false;
+                    document.getElementById("upgrade1").hidden = false;
+                    document.getElementById("upgrade2").hidden = false;
+                    document.getElementById("upgrade5").hidden = false;
+                    document.getElementById("farmImage").hidden = false;
+                    document.getElementById("farmDisplay").hidden = false;
+                    document.getElementById("farmCostDisplay").hidden = false;
+                    document.getElementById("farmOwnedDisplay").hidden = false;
+                    started = true;
+                }
+            }
+
+            function addCookie() {
+                onStart();
+                sound = new Audio("click.mp3");
+                sound.play();
+                cookies+=cookiesMultiplier;
+                document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+            }
+
+            function buyCursor() {
+                if (cookies >= cursorCost) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= cursorCost;
+                    cursorOwned++;
+                    perSecond += cursorMultiplier;
+                    cursorCost = Math.floor(cursorCost * 1.15);
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("cursorOwnedDisplay").innerText = "Owned: " + cursorOwned;
+                        document.getElementById("cursorCostDisplay").innerText = "Cost: " + cursorCost;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                }
+
+            }
+
+            function buyGrandma() {
+                if (cookies >= grandmaCost) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= grandmaCost;
+                    grandmaOwned++;
+                    perSecond += grandmaMultiplier;
+                    grandmaCost = Math.floor(grandmaCost * 1.15);
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("grandmaOwnedDisplay").innerText = "Owned: " + grandmaOwned;
+                    document.getElementById("grandmaCostDisplay").innerText = "Cost: " + grandmaCost;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                }
+            }
+
+            function buyFarm() {
+                if (cookies >= farmCost) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= farmCost;
+                    farmOwned++;
+                    perSecond += farmMultiplier;
+                    farmCost = Math.floor(farmCost * 1.15);
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("farmOwnedDisplay").innerText = "Owned: " + farmOwned;
+                    document.getElementById("farmCostDisplay").innerText = "Cost: " + farmCost;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                }
+            }
+
+            function upgrade1() {
+                if (!upgrades.ironCursors && cookies >= 250) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= 250;
+                    cursorMultiplier = 2;
+                    cookiesMultiplier+=2;
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    upgrades.ironCursors = true;
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                    document.getElementById("perClickDisplay").innerText = "Per click: " + cookiesMultiplier;
+                    document.getElementById("cursorDisplay").innerText = "Cursor: +" + cursorMultiplier + "/sec";
+                    document.getElementById("upgrade1").style.backgroundColor = "lime";
+                    task = setTimeout(function() {
+                        document.getElementById("upgrade1").hidden = true;
+                        document.getElementById("upgrade3").hidden = false;
+                    }, 1000);
+                }
+            }
+
+            function upgrade2() {
+                if (!upgrades.speedyGrandmas && cookies >= 1000) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= 1000;
+                    grandmaMultiplier = 15;
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    upgrades.speedyGrandmas = true;
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                    document.getElementById("grandmaDisplay").innerText = "Grandma: +" + grandmaMultiplier + "/sec";
+                    document.getElementById("upgrade2").style.backgroundColor = "lime";
+                    task = setTimeout(function() {
+                        document.getElementById("upgrade2").hidden = true;
+                        document.getElementById("upgrade4").hidden = false;
+                    }, 1000);
+                }
+            }
+
+            function upgrade3() {
+                if (!upgrades.steelCursors && cookies >= 700) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= 700;
+                    cursorMultiplier = 5;
+                    cookiesMultiplier+=5;
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    upgrades.steelCursors = true;
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                    document.getElementById("cursorDisplay").innerText = "Cursor: +" + cursorMultiplier + "/sec";
+                    document.getElementById("perClickDisplay").innerText = "Per click: " + cookiesMultiplier;
+                    document.getElementById("upgrade3").style.backgroundColor = "lime";
+                    task = setTimeout(function() {
+                        document.getElementById("upgrade3").hidden = true;
+                        document.getElementById("upgrade7").hidden = false;
+                    }, 1000);
+                }
+            }
+
+                function upgrade4() {
+                    if (!upgrades.druggedGrandmas && cookies >= 5000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 5000;
+                        grandmaMultiplier = 25;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.druggedGrandmas = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("grandmaDisplay").innerText = "Grandma: +" + grandmaMultiplier + "/sec";
+                        document.getElementById("upgrade4").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade4").hidden = true;
+                            document.getElementById("upgrade9").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade5() {
+                    if (!upgrades.farmFertilizer && cookies >= 10000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 10000;
+                        farmMultiplier = 200;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.farmFertilizer = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
+                        document.getElementById("upgrade5").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade5").hidden = true;
+                            document.getElementById("upgrade6").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade6() {
+                    if (!upgrades.illegalFarming && cookies >= 25000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 25000;
+                        farmMultiplier = 500;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.illegalFarming = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
+                        document.getElementById("upgrade6").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade6").hidden = true;
+                            document.getElementById("upgrade10").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade7() {
+                    if (!upgrades.goldCursors && cookies >= 2000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 2000;
+                        cursorMultiplier = 10;
+                        cookiesMultiplier+=10;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.goldCursors = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("perClickDisplay").innerText = "Per click: " + cookiesMultiplier;
+                        document.getElementById("cursorDisplay").innerText = "Cursor: +" + cursorMultiplier + "/sec";
+                        document.getElementById("upgrade7").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade7").hidden = true;
+                            document.getElementById("upgrade8").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade8() {
+                    if (!upgrades.platinumCursors && cookies >= 5500) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 5500;
+                        cursorMultiplier = 20;
+                        cookiesMultiplier+=20;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.platinumCursors = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("perClickDisplay").innerText = "Per click: " + cookiesMultiplier;
+                        document.getElementById("cursorDisplay").innerText = "Cursor: +" + cursorMultiplier + "/sec";
+                        document.getElementById("upgrade8").style.backgroundColor = "lime";
+                    }
+                }
+
+                function upgrade9() {
+                    if (!upgrades.grandmaBrainSurgery && cookies >= 10000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 10000;
+                        grandmaMultiplier = 50;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.grandmaBrainSurgery = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("grandmaDisplay").innerText = "Grandma: +" + grandmaMultiplier + "/sec";
+                        document.getElementById("upgrade9").style.backgroundColor = "lime";
+                    }
+                }
+
+                function upgrade10() {
+                    if (!upgrades.alienFarmland && cookies >= 50000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 50000;
+                        farmMultiplier = 1000;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.alienFarmland = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
+                        document.getElementById("upgrade10").style.backgroundColor = "lime";
+                    }
+                }
+
+            setInterval(function() {
+                cookies += perSecond;
+                grandmaCookies += grandmaOwned * grandmaMultiplier;
+                document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+            }, 1000);
+
+            setInterval(function() {
+                if (grandmaCookies >= 10000 && !grandmaTakeover.background1) {
+                    Music.pause();
+                    document.body.style.backgroundImage = "url('grandmaBackground.png')";
+                    document.getElementById("GrandmaTakeover").hidden = false;
+                    document.getElementById("GrandmaTakeover").innerHTML = "WE ARE THE GRANDMAS - The Grandmas";
+                    grandmaTakeover.background1 = true;
+                }
+
+                if (grandmaCookies >= 100000 && !grandmaTakeover.background2) {
+                    Music.pause();
+                    demonSong.play();
+                    document.body.style.backgroundImage = "url('redGrandmaBackground.png')";
+                    document.getElementById("GrandmaTakeover").hidden = false;
+                    document.getElementById("GrandmaTakeover").innerHTML = "WE WILL RISE! - The Grandmas";
+                    grandmaTakeover.background2 = true;
+                    document.getElementById("cookieImage").hidden = true;
+                    document.getElementById("demonCookieImage").hidden = false;
+                }
+
+                if (grandmaCookies >= 1000000 && !grandmaTakeover.background3) {
+                    Music.pause();
+                    demonSong.pause();
+                    takeoverSong.play();
+
+                    const vid = document.getElementById("bgVideo");
+                    vid.hidden = false;
+
+                    document.getElementById("GrandmaTakeover").hidden = false;
+                    document.getElementById("GrandmaTakeover").innerHTML = "GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA GRANDMA - The Grandmas";
+                    document.getElementById("demonCookieImage").src = "grandmaDemonCookie.png";
+                    grandmaTakeover.background3 = true;
+                }
+
+            }, 10);
+        </script>
+    </body>
+</html>
