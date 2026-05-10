@@ -122,13 +122,15 @@
         <button id="upgrade1" class="up1 bigger" onclick="upgrade1()" hidden>Iron cursors: 250</button>
         <button id="upgrade2" class="up2 bigger" onclick="upgrade2()" hidden>Speedy grandmas: 1000</button>
         <button id="upgrade3" class="up1 bigger" onclick="upgrade3()" hidden>Steel cursors: 750</button>
-        <button id="upgrade4" class="up2 bigger" onclick="upgrade4()" hidden>Drugged grandmas: 5000</button>
+        <button id="upgrade4" class="up2 bigger" onclick="upgrade4()" hidden>Drugged grandmas: 5500</button>
         <button id="upgrade5" class="up3 bigger" onclick="upgrade5()" hidden>Farm fertilizer: 10000</button>
         <button id="upgrade6" class="up3 bigger" onclick="upgrade6()" hidden>Illegal farming methods: 25000</button>
-        <button id="upgrade7" class="up1 bigger" onclick="upgrade7()" hidden>Gold cursors: 2000</button>
-        <button id="upgrade8" class="up1 bigger" onclick="upgrade8()" hidden>Platinum cursors: 5500</button>
-        <button id="upgrade9" class="up2 bigger" onclick="upgrade9()" hidden>Grandma brain surgery: 10000</button>
-        <button id="upgrade10" class="up3 bigger" onclick="upgrade10()" hidden>Alien farmland: 50000</button>
+        <button id="upgrade7" class="up1 bigger" onclick="upgrade7()" hidden>Gold cursors: 2500</button>
+        <button id="upgrade8" class="up1 bigger" onclick="upgrade8()" hidden>Platinum cursors: 7000</button>
+        <button id="upgrade9" class="up2 bigger" onclick="upgrade9()" hidden>Grandma brain surgery: 15000</button>
+        <button id="upgrade10" class="up3 bigger" onclick="upgrade10()" hidden>Alien farmland: 75000</button>
+        <button id="upgrade11" class="up2 bigger" onclick="upgrade11()" hidden>Simulate grandmas: 75000</button>
+        <button id="upgrade12" class="up3 bigger" onclick="upgrade12()" hidden>Dark matter farmland: 500000</button>
 
         <video id="bgVideo" autoplay muted loop playsinline hidden>
             <source src="grandmaTakeover.mp4" type="video/mp4">
@@ -161,12 +163,14 @@
                 speedyGrandmas: false,
                 druggedGrandmas: false,
                 grandmaBrainSurgery: false,
+                simulateGrandmas: false,
                 steelCursors: false,
                 goldCursors: false,
                 platinumCursors: false,
                 farmFertilizer: false,
                 illegalFarming: false,
-                alienFarmland: false
+                alienFarmland: false,
+                darkMatterFarmland: false
             };
             let grandmaTakeover = {
                 background1: false,
@@ -299,10 +303,10 @@
             }
 
             function upgrade3() {
-                if (!upgrades.steelCursors && cookies >= 700) {
+                if (!upgrades.steelCursors && cookies >= 750) {
                     buySound = new Audio("buy.mp3");
                     buySound.play();
-                    cookies -= 700;
+                    cookies -= 750;
                     cursorMultiplier = 5;
                     cookiesMultiplier+=5;
                     perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
@@ -320,10 +324,10 @@
             }
 
                 function upgrade4() {
-                    if (!upgrades.druggedGrandmas && cookies >= 5000) {
+                    if (!upgrades.druggedGrandmas && cookies >= 5500) {
                         buySound = new Audio("buy.mp3");
                         buySound.play();
-                        cookies -= 5000;
+                        cookies -= 5500;
                         grandmaMultiplier = 25;
                         perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
                         upgrades.druggedGrandmas = true;
@@ -377,10 +381,10 @@
                 }
 
                 function upgrade7() {
-                    if (!upgrades.goldCursors && cookies >= 2000) {
+                    if (!upgrades.goldCursors && cookies >= 2500) {
                         buySound = new Audio("buy.mp3");
                         buySound.play();
-                        cookies -= 2000;
+                        cookies -= 2500;
                         cursorMultiplier = 10;
                         cookiesMultiplier+=10;
                         perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
@@ -398,10 +402,10 @@
                 }
 
                 function upgrade8() {
-                    if (!upgrades.platinumCursors && cookies >= 5500) {
+                    if (!upgrades.platinumCursors && cookies >= 7000) {
                         buySound = new Audio("buy.mp3");
                         buySound.play();
-                        cookies -= 5500;
+                        cookies -= 7000;
                         cursorMultiplier = 20;
                         cookiesMultiplier+=20;
                         perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
@@ -411,14 +415,17 @@
                         document.getElementById("perClickDisplay").innerText = "Per click: " + cookiesMultiplier;
                         document.getElementById("cursorDisplay").innerText = "Cursor: +" + cursorMultiplier + "/sec";
                         document.getElementById("upgrade8").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade8").innerHTML = "MAX";
+                        }, 1000);
                     }
                 }
 
                 function upgrade9() {
-                    if (!upgrades.grandmaBrainSurgery && cookies >= 10000) {
+                    if (!upgrades.grandmaBrainSurgery && cookies >= 15000) {
                         buySound = new Audio("buy.mp3");
                         buySound.play();
-                        cookies -= 10000;
+                        cookies -= 15000;
                         grandmaMultiplier = 50;
                         perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
                         upgrades.grandmaBrainSurgery = true;
@@ -426,14 +433,18 @@
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
                         document.getElementById("grandmaDisplay").innerText = "Grandma: +" + grandmaMultiplier + "/sec";
                         document.getElementById("upgrade9").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade9").hidden = true;
+                            document.getElementById("upgrade11").hidden = false;
+                        }, 1000);
                     }
                 }
 
                 function upgrade10() {
-                    if (!upgrades.alienFarmland && cookies >= 50000) {
+                    if (!upgrades.alienFarmland && cookies >= 75000) {
                         buySound = new Audio("buy.mp3");
                         buySound.play();
-                        cookies -= 50000;
+                        cookies -= 75000;
                         farmMultiplier = 1000;
                         perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
                         upgrades.alienFarmland = true;
@@ -441,8 +452,48 @@
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
                         document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
                         document.getElementById("upgrade10").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade10").hidden = true;
+                            document.getElementById("upgrade12").hidden = false;
+                        }, 1000);
                     }
                 }
+
+                function upgrade11() {
+                    if (!upgrades.simulateGrandmas && cookies >= 75000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 75000;
+                        grandmaMultiplier = 100;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        upgrades.simulateGrandmas = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("grandmaDisplay").innerText = "Grandma: +" + grandmaMultiplier + "/sec";
+                        document.getElementById("upgrade11").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade11").innerHTML = "MAX";
+                        }, 1000);
+                    }
+                }
+
+                    function upgrade12() {
+                        if (!upgrades.darkMatterFarmland && cookies >= 500000) {
+                            buySound = new Audio("buy.mp3");
+                            buySound.play();
+                            cookies -= 500000;
+                            farmMultiplier = 5000;
+                            perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                            upgrades.darkMatterFarmland = true;
+                            document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                            document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                            document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
+                            document.getElementById("upgrade12").style.backgroundColor = "lime";
+                            task = setTimeout(function() {
+                                document.getElementById("upgrade12").innerHTML = "MAX";
+                            }, 1000);
+                        }
+                    }
 
             setInterval(function() {
                 cookies += perSecond;
