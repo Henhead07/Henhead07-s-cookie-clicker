@@ -81,6 +81,13 @@
                 top: 160px;
             }
 
+            .up4 {
+                position: absolute;
+                float: right;
+                right: 2%;
+                top: 200px;
+            }
+
             #bgVideo {
                 position: fixed;
                 top: 0;
@@ -118,6 +125,12 @@
         <h1 id="farmDisplay" hidden>Farm: +100/sec</h1>
         <h2 id="farmCostDisplay" hidden>Cost: 5000</h2>
         <h2 id="farmOwnedDisplay" hidden>Owned: 0</h2>
+        <img id="factoryImage" onclick="buyFactory()" src="factory.png" width="75px" alt="factory" class="bigger" hidden>
+        <h1 id="factoryDisplay" hidden>Factory: +1000/sec</h1>
+        <h2 id="factoryCostDisplay" hidden>Cost: 50000</h2>
+        <h2 id="factoryOwnedDisplay" hidden>Owned: 0</h2>
+        <button id="scrollLeft" onclick="scrollPageLeft()" hidden><</button>
+        <button id="scrollRight" onclick="scrollPageRight()" hidden>></button>
         <h1 id="upgradesText" class="right" hidden>Upgrades:</h1>
         <button id="upgrade1" class="up1 bigger" onclick="upgrade1()" hidden>Iron cursors: 250</button>
         <button id="upgrade2" class="up2 bigger" onclick="upgrade2()" hidden>Speedy grandmas: 1000</button>
@@ -131,6 +144,10 @@
         <button id="upgrade10" class="up3 bigger" onclick="upgrade10()" hidden>Alien farmland: 75000</button>
         <button id="upgrade11" class="up2 bigger" onclick="upgrade11()" hidden>Simulate grandmas: 75000</button>
         <button id="upgrade12" class="up3 bigger" onclick="upgrade12()" hidden>Dark matter farmland: 500000</button>
+        <button id="upgrade13" class="up4 bigger" onclick="upgrade13()" hidden>Reduce factory workers wage: 125000</button>
+        <button id="upgrade14" class="up4 bigger" onclick="upgrade14()" hidden>Increased factory pollution: 250000</button>
+        <button id="upgrade15" class="up4 bigger" onclick="upgrade15()" hidden>Factorys on the moon: 600000</button>
+        <button id="upgrade16" class="up4 bigger" onclick="upgrade16()" hidden>Produce dark matter: 1000000</button>
 
         <video id="bgVideo" autoplay muted loop playsinline hidden>
             <source src="grandmaTakeover.mp4" type="video/mp4">
@@ -158,6 +175,9 @@
             let farmOwned = 0;
             let farmCost = 5000;
             let farmMultiplier = 100;
+            let factoryOwned = 0;
+            let factoryCost = 50000;
+            let factoryMultiplier = 1000;
             let upgrades = {
                 ironCursors: false,
                 speedyGrandmas: false,
@@ -178,6 +198,7 @@
                 background3: false
             };
             let started = false;
+            let page = 1;
 
             function onStart() {
                 if (!started) {
@@ -200,10 +221,13 @@
                     document.getElementById("upgrade1").hidden = false;
                     document.getElementById("upgrade2").hidden = false;
                     document.getElementById("upgrade5").hidden = false;
+                    document.getElementById("upgrade13").hidden = false;
                     document.getElementById("farmImage").hidden = false;
                     document.getElementById("farmDisplay").hidden = false;
                     document.getElementById("farmCostDisplay").hidden = false;
                     document.getElementById("farmOwnedDisplay").hidden = false;
+                    document.getElementById("scrollLeft").hidden = false;
+                    document.getElementById("scrollRight").hidden = false;
                     started = true;
                 }
             }
@@ -262,6 +286,21 @@
                 }
             }
 
+            function buyFactory() {
+                if (cookies >= factoryCost) {
+                    buySound = new Audio("buy.mp3");
+                    buySound.play();
+                    cookies -= factoryCost;
+                    factoryOwned++;
+                    perSecond += factoryMultiplier;
+                    factoryCost = Math.floor(factoryCost * 1.15);
+                    document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                    document.getElementById("factoryOwnedDisplay").innerText = "Owned: " + factoryOwned;
+                    document.getElementById("factoryCostDisplay").innerText = "Cost: " + factoryCost;
+                    document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                }
+            }
+
             function upgrade1() {
                 if (!upgrades.ironCursors && cookies >= 250) {
                     buySound = new Audio("buy.mp3");
@@ -269,7 +308,7 @@
                     cookies -= 250;
                     cursorMultiplier = 2;
                     cookiesMultiplier+=2;
-                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                     upgrades.ironCursors = true;
                     document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                     document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -289,7 +328,7 @@
                     buySound.play();
                     cookies -= 1000;
                     grandmaMultiplier = 15;
-                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                     upgrades.speedyGrandmas = true;
                     document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                     document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -309,7 +348,7 @@
                     cookies -= 750;
                     cursorMultiplier = 5;
                     cookiesMultiplier+=5;
-                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                    perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                     upgrades.steelCursors = true;
                     document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                     document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -329,7 +368,7 @@
                         buySound.play();
                         cookies -= 5500;
                         grandmaMultiplier = 25;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.druggedGrandmas = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -348,7 +387,7 @@
                         buySound.play();
                         cookies -= 10000;
                         farmMultiplier = 200;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.farmFertilizer = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -367,7 +406,7 @@
                         buySound.play();
                         cookies -= 25000;
                         farmMultiplier = 500;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.illegalFarming = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -387,7 +426,7 @@
                         cookies -= 2500;
                         cursorMultiplier = 10;
                         cookiesMultiplier+=10;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.goldCursors = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -408,7 +447,7 @@
                         cookies -= 7000;
                         cursorMultiplier = 20;
                         cookiesMultiplier+=20;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.platinumCursors = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -427,7 +466,7 @@
                         buySound.play();
                         cookies -= 15000;
                         grandmaMultiplier = 50;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.grandmaBrainSurgery = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -446,7 +485,7 @@
                         buySound.play();
                         cookies -= 75000;
                         farmMultiplier = 1000;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.alienFarmland = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -465,7 +504,7 @@
                         buySound.play();
                         cookies -= 75000;
                         grandmaMultiplier = 100;
-                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
                         upgrades.simulateGrandmas = true;
                         document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
                         document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
@@ -477,23 +516,148 @@
                     }
                 }
 
-                    function upgrade12() {
-                        if (!upgrades.darkMatterFarmland && cookies >= 500000) {
-                            buySound = new Audio("buy.mp3");
-                            buySound.play();
-                            cookies -= 500000;
-                            farmMultiplier = 5000;
-                            perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier);
-                            upgrades.darkMatterFarmland = true;
-                            document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
-                            document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
-                            document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
-                            document.getElementById("upgrade12").style.backgroundColor = "lime";
-                            task = setTimeout(function() {
-                                document.getElementById("upgrade12").innerHTML = "MAX";
-                            }, 1000);
-                        }
+                function upgrade12() {
+                     if (!upgrades.darkMatterFarmland && cookies >= 500000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 500000;
+                        farmMultiplier = 5000;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
+                        upgrades.darkMatterFarmland = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("farmDisplay").innerText = "Farm: +" + farmMultiplier + "/sec";
+                        document.getElementById("upgrade12").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade12").innerHTML = "MAX";
+                        }, 1000);
                     }
+                }
+
+                function upgrade13() {
+                    if (!upgrades.reduceFactoryWage && cookies >= 125000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 125000;
+                        factoryMultiplier = 2500;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
+                        upgrades.reduceFactoryWage = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("factoryDisplay").innerText = "Factory: +" + factoryMultiplier + "/sec";
+                        document.getElementById("upgrade13").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade13").hidden = true;
+                            document.getElementById("upgrade14").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade14() {
+                    if (!upgrades.increasedFactoryPollution && cookies >= 250000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 250000;
+                        factoryMultiplier = 5000;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
+                        upgrades.increasedFactoryPollution = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("factoryDisplay").innerText = "Factory: +" + factoryMultiplier + "/sec";
+                        document.getElementById("upgrade14").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade14").hidden = true;
+                            document.getElementById("upgrade15").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade15() {
+                    if (!upgrades.factorysOnTheMoon && cookies >= 600000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 600000;
+                        factoryMultiplier = 7500;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
+                        upgrades.factorysOnTheMoon = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("factoryDisplay").innerText = "Factory: +" + factoryMultiplier + "/sec";
+                        document.getElementById("upgrade15").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade15").hidden = true;
+                            document.getElementById("upgrade16").hidden = false;
+                        }, 1000);
+                    }
+                }
+
+                function upgrade16() {
+                    if (!upgrades.produceDarkMatter && cookies >= 1000000) {
+                        buySound = new Audio("buy.mp3");
+                        buySound.play();
+                        cookies -= 1000000;
+                        factoryMultiplier = 10000;
+                        perSecond = (cursorOwned * cursorMultiplier) + (grandmaOwned * grandmaMultiplier) + (farmOwned * farmMultiplier) + (factoryOwned * factoryMultiplier);
+                        upgrades.produceDarkMatter = true;
+                        document.getElementById("cookiesDisplay").innerText = "Cookies: " + cookies;
+                        document.getElementById("perSecondDisplay").innerText = "Per Second: " + perSecond;
+                        document.getElementById("factoryDisplay").innerText = "Factory: +" + factoryMultiplier + "/sec";
+                        document.getElementById("upgrade16").style.backgroundColor = "lime";
+                        task = setTimeout(function() {
+                            document.getElementById("upgrade16").innerHTML = "MAX";
+                        }, 1000);
+                    }
+                }
+
+                function scrollPageLeft() {
+                    if (page = 2) {
+                        page--;
+                        document.getElementById("cursorImage").hidden = false;
+                        document.getElementById("cursorDisplay").hidden = false;
+                        document.getElementById("cursorCostDisplay").hidden = false;
+                        document.getElementById("cursorOwnedDisplay").hidden = false;
+
+                        document.getElementById("grandmaImage").hidden = false;
+                        document.getElementById("grandmaDisplay").hidden = false;
+                        document.getElementById("grandmaCostDisplay").hidden = false;
+                        document.getElementById("grandmaOwnedDisplay").hidden = false;
+
+                        document.getElementById("farmImage").hidden = false;
+                        document.getElementById("farmDisplay").hidden = false;
+                        document.getElementById("farmCostDisplay").hidden = false;
+                        document.getElementById("farmOwnedDisplay").hidden = false;
+
+                        document.getElementById("factoryImage").hidden = true;
+                        document.getElementById("factoryDisplay").hidden = true;
+                        document.getElementById("factoryCostDisplay").hidden = true;
+                        document.getElementById("factoryOwnedDisplay").hidden = true;
+                    }
+                }
+
+                function scrollPageRight() {
+                    if (page = 1) {
+                        page++;
+                        document.getElementById("cursorImage").hidden = true;
+                        document.getElementById("cursorDisplay").hidden = true;
+                        document.getElementById("cursorCostDisplay").hidden = true;
+                        document.getElementById("cursorOwnedDisplay").hidden = true;
+
+                        document.getElementById("grandmaImage").hidden = true;
+                        document.getElementById("grandmaDisplay").hidden = true;
+                        document.getElementById("grandmaCostDisplay").hidden = true;
+                        document.getElementById("grandmaOwnedDisplay").hidden = true;
+
+                        document.getElementById("farmImage").hidden = true;
+                        document.getElementById("farmDisplay").hidden = true;
+                        document.getElementById("farmCostDisplay").hidden = true;
+                        document.getElementById("farmOwnedDisplay").hidden = true;
+
+                        document.getElementById("factoryImage").hidden = false;
+                        document.getElementById("factoryDisplay").hidden = false;
+                        document.getElementById("factoryCostDisplay").hidden = false;
+                        document.getElementById("factoryOwnedDisplay").hidden = false;
+                    }
+                }
 
             setInterval(function() {
                 cookies += perSecond;
@@ -534,7 +698,6 @@
                     document.getElementById("demonCookieImage").src = "grandmaDemonCookie.png";
                     grandmaTakeover.background3 = true;
                 }
-
             }, 10);
         </script>
     </body>
